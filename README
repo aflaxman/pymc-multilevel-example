@@ -150,5 +150,10 @@ I'm not keeping careful track of if the results change as I modify the
 step methods, which is probably not a recommended practice.  But it is
 fun to see the methods get faster and faster as I group more and more
 in the AM step method.  (43s wall time for M.B and M.U in one AM,
-commit here)
+commit here; 32s wall time for all stochs together, but the results
+are not pretty.)
 
+Sometimes I've had good luck with choosing initial values for the MCMC
+by maximizing the posterior or something related to it.  Here is code
+to do that, which doesn't take very long (36s wall time, and
+respectible looking results are back).
