@@ -133,4 +133,16 @@ Here are my notes on the matter:
 
 I think that speeding up the MCMC is more fun than cleaning up the
 data wrangling, so I'll assume that the data is being set up as
-desired for now and mess around with the step methods.
+desired for now and mess around with the step methods.  Commit
+59b067a52fe22b692f0a7bf5f1b007269c9e4d05 is a small example of this,
+which doesn't speed things up, but could mean less samples are
+required of the chain.
+
+To speed things up (and also potentially reduce the number of samples
+required), I'm going to combine the beta0 and beta1 stochs. This
+reduces the wall time to 58s, but the diagnostic plots make me think
+the it needs a longer burn-in period.  I like to throw out the first
+half of my samples, so I'll make that change, too.  Pro tip: I added a
+reload(analysis1) to the run_analysis1.py script, so that my changes
+to the model automatically make it into ipython when I say <code>time
+run run_analysis1</code>.

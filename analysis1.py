@@ -21,8 +21,7 @@ Z = Z[0:240:1,0:10:1]
 var_u = pymc.Gamma('var_u', alpha=1, beta=1)
 tau_u = pymc.Lambda('tau_u', lambda v=var_u: v**-1)
 
-b0 = pymc.Normal('b0', mu=0, tau=10000**-1)
-b1 = pymc.Normal('b1', mu=0, tau=10000**-1)
+B = pymc.Normal('B', mu=[0, 0], tau=10000**-1)
 
 U = pymc.Normal('u', mu=0, tau=tau_u, value=np.zeros(10))
 
@@ -30,8 +29,7 @@ var_e1 = pymc.Uniform('var_e1', lower=0, upper=100)
 tau_e1 = pymc.Lambda('tau_e1', lambda v=var_e1: v**-1)
 
 @pymc.deterministic
-def y_hat(b0=b0, b1=b1, X=X, Z=Z, U=U):
-    B = np.array((b0,b1))
+def y_hat(B=B, X=X, Z=Z, U=U):
     return np.dot(X,B)+np.dot(Z,U)
 
 @pymc.stochastic(observed=True)
