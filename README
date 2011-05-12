@@ -145,4 +145,4 @@ the it needs a longer burn-in period.  I like to throw out the first
 half of my samples, so I'll make that change, too.  Pro tip: I added a
 reload(analysis1) to the run_analysis1.py script, so that my changes
 to the model automatically make it into ipython when I say <code>time
-run run_analysis1</code>.
+run run_analysis1</code>. (Commit d39f037b5273b4853354014ba41eb365073284eb)
