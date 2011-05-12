@@ -19,3 +19,4 @@ for k in fit.keys():
     print(k,fit[k]['mean'])
 
 Matplot.plot(M)
+show()
