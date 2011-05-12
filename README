@@ -145,3 +145,10 @@ half of my samples, so I'll make that change, too.  Pro tip: I added a
 reload(analysis1) to the run_analysis1.py script, so that my changes
 to the model automatically make it into ipython when I say <code>time
 run run_analysis1</code>. (Commit to be linked here.)
+
+I'm not keeping careful track of if the results change as I modify the
+step methods, which is probably not a recommended practice.  But it is
+fun to see the methods get faster and faster as I group more and more
+in the AM step method.  (43s wall time for M.B and M.U in one AM,
+commit here)
+
