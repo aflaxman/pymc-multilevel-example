@@ -131,3 +131,6 @@ Here are my notes on the matter:
 5.  Indentation should be 4 spaces.  Diverging from this inane detail
     will make python people itchy.
 
+I think that speeding up the MCMC is more fun than cleaning up the
+data wrangling, so I'll assume that the data is being set up as
+desired for now and mess around with the step methods.
