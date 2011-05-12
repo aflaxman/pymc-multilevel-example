@@ -31,11 +31,11 @@ tau_e1 = pymc.Lambda('tau_e1', lambda v=var_e1: v**-1)
 
 @pymc.deterministic
 def y_hat(b0=b0, b1=b1, X=X, Z=Z, U=U):
-	B = np.array((b0,b1))
-	return np.dot(X,B)+np.dot(Z,U)
+    B = np.array((b0,b1))
+    return np.dot(X,B)+np.dot(Z,U)
 
 @pymc.stochastic(observed=True)
 def y_i(value=y, mu=y_hat, tau=tau_e1):
-	return pymc.normal_like(value,mu,tau)
+    return pymc.normal_like(value,mu,tau)
 
 
