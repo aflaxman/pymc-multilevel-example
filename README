@@ -1,0 +1,83 @@
+Hi All,
+
+New to this group and to PyMC (and mostly new to Python). In any case,
+I'm writing to ask for help in specifying a multilevel model (mixed
+model) for what I call partially clustered designs. An example of a
+partially clustered design is a 2-condition randomized psychotherapy
+study where subjects are randomly assigned to conditions. In condition
+1, subjects are treated in small groups of say 8 people a piece. In
+the condition 2, usually a control, subjects are only assessed on the
+outcome (they don't receive an intervention). Thus you have clustering
+in condition 1 but not condition 2.
+
+The model for a 2-condition study looks like (just a single time point
+to keep things simpler):
+
+y_ij = b_0 + b_1*Tx + u_j*Tx + e_ij
+
+where y_ij is the outcome for the ith person in cluster j (in most
+multilevel modeling software and in PROC MCMC in SAS, subjects in the
+unclustered condition are all in clusters of just 1 person), b_0 is
+the overall intercept, b_1 is the treatment effect, Tx is a dummy
+coded variable coded as 1 for the clustered condition and 0 for the
+unclustered condition, u_j is the random effect for cluster j, and
+e_ij is the residual error. The variance among clusters is \sigma^2_u
+and the residual term is \sigma^2_e (ideally you would estimate a
+unique residual by condition).
+
+Because u_j interacts with Tx, the random effect is only contributes
+to the clustered condition.
+
+In my PyMC model, I expressed the model in matrix form - I find it
+easier to deal with especially for dealing with the cluster effects.
+Namely:
+
+Y = XB + ZU + R
+
+where X is an n x 2 design matrix for the overall intercept and
+intervention effect, B is a 1 x 2 matrix of regression coefficients, Z
+is an n x c design matrix for the cluster effects (where c is equal to
+the number of clusters in the clustered condition), and U is a c x 1
+matrix of cluster effects. The way I've written the model below, I
+have R as an n x n diagonal matrix with \sigma^2_e on the diagonal and
+0's on the off-diagonal.
+
+All priors below are based on a model fit in PROC MCMC in SAS. I'm
+trying to replicate the analyses in PyMC so I don't want to change the
+priors.
+
+The data for my code can be downloaded here:
+http://dl.dropbox.com/u/613463/run1.csv
+
+The data consist of 200 total subjects. 100 in the clustered condition
+and 100 in the unclustered. In the clustered condition there are 10
+clusters of 10 people each. There is a single outcome variable.
+
+The PyMC set-up file can be downloaded here (also pasted below):
+http://dl.dropbox.com/u/613463/analysis1.py
+
+The file for running the PyMC set-up file can be downloaded here:
+http://dl.dropbox.com/u/613463/run_analysis1.py
+
+I have 3 specific questions about the model:
+
+1 - Given the description of the model, have I successfully specified
+the model? The results are quite similar to PROC MCMC, though the
+cluster variance (\sigma^2_u) differs more than I would expect due to
+Monte Carlo error. The differences make me wonder if I haven't got it
+quite right in PyMC.
+
+2 - Is there a better (or more efficient) way to set up the model? The
+model runs quickly but I am trying to learn Python and to get better
+at optimizing how to set up models (especially multilevel models).
+
+3 - How can change my specification so that I can estimate unique
+residual variances for clustered and unclustered conditions? Right now
+I've estimated just a single residual variance. But I typically want
+separate estimates for the residual variances per intervention
+condition.
+
+Thanks so much for your help. My code follows my signature.
+
+Best,
+Scott
