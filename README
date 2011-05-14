@@ -168,3 +168,13 @@ https://github.com/aflaxman/pymc-multilevel-example/commit/e8c376b8685c64c7183a8
 So that little burst of messing around has halved the run time.  Too
 bad I didn't work on the things I was supposed to be doing for the
 last hour.
+
+Another hour of messing around has given me some confidence that 200K
+samples is certainly enough, and 20K samples probably is enough to
+guide model development.  To assess this, I relied on the
+autocorrelation plot of the stoch traces, which I added to the
+Matplot.plot routine, since I think everyone should use it approach.
+
+Now I'm ready to try simplifying the data wrangling section, and then
+everything will be in order to extend the model to have different
+variance for the clustered and unclustered observations.
