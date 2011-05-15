@@ -1,35 +1,34 @@
 import pylab as pl
-import numpy as np
-import pymc
+import pymc as mc
 
 run1 = pl.csv2rec('run1.csv')
 
-##Design matrix for intercept and intervention effect
+## Design matrix for intercept and intervention effect
 X = [[1., t_ij] for t_ij in run1.treat]
 
-##Design matrix for cluster effect
+## Design matrix for cluster effect
 Z = pl.zeros([len(run1), 10])
 for row, j in enumerate(run1.j):
     if j <= 10:
         Z[row, j-1] = 1.
 
 ## Priors
-var_u = pymc.Gamma('var_u', alpha=1, beta=1, value=1.)
-tau_u = pymc.Lambda('tau_u', lambda v=var_u: v**-1, trace=False)
+var_u = mc.Gamma('var_u', alpha=1, beta=1, value=1.)
+tau_u = mc.Lambda('tau_u', lambda v=var_u: v**-1, trace=False)
 
-B = pymc.Normal('B', mu=[0, 0], tau=10000**-1)
+B = mc.Normal('B', mu=[0, 0], tau=10000**-1)
 
-U = pymc.Normal('u', mu=0, tau=tau_u, value=np.zeros(10))
+U = mc.Normal('u', mu=0, tau=tau_u, value=pl.zeros(10))
 
-var_e1 = pymc.Uniform('var_e1', lower=0, upper=100, value=[1., 1.])
-tau_e1 = pymc.Lambda('tau_e1', lambda v=var_e1: v**-1, trace=False)
+var_e1 = mc.Uniform('var_e1', lower=0, upper=100, value=[1., 1.])
+tau_e1 = mc.Lambda('tau_e1', lambda v=var_e1: v**-1, trace=False)
 
-@pymc.deterministic(trace=False)
+@mc.deterministic(trace=False)
 def y_hat(B=B, X=X, Z=Z, U=U):
-    return np.dot(X,B)+np.dot(Z,U)
+    return pl.dot(X,B) + pl.dot(Z,U)
 
-@pymc.stochastic(observed=True)
+@mc.stochastic(observed=True)
 def y_i(value=run1.y, mu=y_hat, tau=tau_e1):
-    return pymc.normal_like(value,mu,tau[run1.treat])
+    return mc.normal_like(value,mu,tau[run1.treat])
 
 
