@@ -178,3 +178,10 @@ Matplot.plot routine, since I think everyone should use it approach.
 Now I'm ready to try simplifying the data wrangling section, and then
 everything will be in order to extend the model to have different
 variance for the clustered and unclustered observations.
+
+I like to use pylab's csv2rec function for loading data files.  It
+deals nicely with the column headings, and converts data to the
+correct type pretty routinely.  I'm going to do two commits in the
+process of changing this code, one which checks carefully that I'm not
+breaking anything, and then another to yield a nice short block of
+code.
