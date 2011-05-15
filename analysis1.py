@@ -21,7 +21,7 @@ B = pymc.Normal('B', mu=[0, 0], tau=10000**-1)
 
 U = pymc.Normal('u', mu=0, tau=tau_u, value=np.zeros(10))
 
-var_e1 = pymc.Uniform('var_e1', lower=0, upper=100, value=1.)
+var_e1 = pymc.Uniform('var_e1', lower=0, upper=100, value=[1., 1.])
 tau_e1 = pymc.Lambda('tau_e1', lambda v=var_e1: v**-1, trace=False)
 
 @pymc.deterministic(trace=False)
@@ -30,6 +30,6 @@ def y_hat(B=B, X=X, Z=Z, U=U):
 
 @pymc.stochastic(observed=True)
 def y_i(value=run1.y, mu=y_hat, tau=tau_e1):
-    return pymc.normal_like(value,mu,tau)
+    return pymc.normal_like(value,mu,tau[run1.treat])
 
 

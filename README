@@ -185,3 +185,30 @@ correct type pretty routinely.  I'm going to do two commits in the
 process of changing this code, one which checks carefully that I'm not
 breaking anything, and then another to yield a nice short block of
 code.
+
+Now, on to changing the model!  I added a separate variance parameter
+for the treatment and control groups in a slightly sneaky way.  It
+only took 10 keystrokes (roughly), but maybe it would be better to use
+more code and have a clearer approach.
+
+Before:
+         B: [-0.07  0.3 ]
+         u: [-0.14  0.02  0.3   0.5   0.36 -1.02  0.33  0.23 -0.28 -0.35]
+    var_e1: 0.94
+     var_u: 0.4
+
+After:
+         B: [-0.06  0.31]
+         u: [-0.13  0.    0.28  0.53  0.39 -1.08  0.34  0.22 -0.31 -0.35]
+    var_e1: [ 1.12  0.79]
+     var_u: 0.41
+
+Since I sneakily used the indicator run1.treat to index the var_e1
+array, var_e1[0] is the control variance and var_e1[1] is the
+treatment variance.  So the change in the model doesn't change any of
+the parameter means, but it does show that the variance of the
+control group is higher than for the treatment group.
+
+Too bad I didn't generate before-and-after numbers on the uncertainty
+intervals, that is something that might have changed in an interesting
+way with this more complicated model.
