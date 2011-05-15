@@ -1,7 +1,7 @@
 import pymc
 import analysis1
 reload(analysis1)
-from pylab import hist, show
+import pylab as pl
 #from pymc import Matplot
 import Matplot
 reload(Matplot)
@@ -18,7 +18,7 @@ M.sample(iter=20000, burn=10000, thin=10, verbose=2)
 
 fit = M.stats()
 for k in fit.keys():
-    print(k,fit[k]['mean'])
+    print '%10s: %s' % (k, pl.floor(fit[k]['mean']*100.)/100.)
 
 Matplot.plot(M)
-show()
+pl.show()

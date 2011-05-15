@@ -28,7 +28,7 @@ U = pymc.Normal('u', mu=0, tau=tau_u, value=np.zeros(10))
 var_e1 = pymc.Uniform('var_e1', lower=0, upper=100, value=1.)
 tau_e1 = pymc.Lambda('tau_e1', lambda v=var_e1: v**-1)
 
-@pymc.deterministic
+@pymc.deterministic(trace=False)
 def y_hat(B=B, X=X, Z=Z, U=U):
     return np.dot(X,B)+np.dot(Z,U)
 
