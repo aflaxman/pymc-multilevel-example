@@ -15,14 +15,14 @@ for row, j in enumerate(run1.j):
 
 ## Priors
 var_u = pymc.Gamma('var_u', alpha=1, beta=1, value=1.)
-tau_u = pymc.Lambda('tau_u', lambda v=var_u: v**-1)
+tau_u = pymc.Lambda('tau_u', lambda v=var_u: v**-1, trace=False)
 
 B = pymc.Normal('B', mu=[0, 0], tau=10000**-1)
 
 U = pymc.Normal('u', mu=0, tau=tau_u, value=np.zeros(10))
 
 var_e1 = pymc.Uniform('var_e1', lower=0, upper=100, value=1.)
-tau_e1 = pymc.Lambda('tau_e1', lambda v=var_e1: v**-1)
+tau_e1 = pymc.Lambda('tau_e1', lambda v=var_e1: v**-1, trace=False)
 
 @pymc.deterministic(trace=False)
 def y_hat(B=B, X=X, Z=Z, U=U):
