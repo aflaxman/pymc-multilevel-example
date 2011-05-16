@@ -12,7 +12,7 @@ except ImportError:
     gridspec = None
 import pymc
 import os
-from pylab import bar, hist, plot as pyplot, xlabel, ylabel, xlim, ylim, close, savefig
+from pylab import bar, hist, plot as pyplot, xlabel, ylabel, xlim, ylim, close, savefig, acorr, mlab
 from pylab import figure, subplot, subplots_adjust, gca, scatter, axvline, yticks, xticks
 from pylab import setp, axis, contourf, cm, title, colorbar, clf, fill, show, text
 from pylab import errorbar
@@ -442,7 +442,7 @@ def histogram(data, name, nbins=None, datarange=(None, None), format='png', suff
         nbins = nbins or uniquevals*(uniquevals<=25) or int(4 + 1.5*log(len(data)))
 
         # Generate histogram
-        hist(data.tolist(), nbins)
+        hist(data.tolist(), nbins, histtype='stepfilled')
 
         xlim(datarange)
 
@@ -629,7 +629,7 @@ def gof_plot(simdata, trueval, name=None, nbins=None, format='png', suffix='-gof
     #close()
 
 @plotwrapper
-def autocorrelation(data, name, maxlag=100, format='png', suffix='-acf', path='./', fontmap = {1:10, 2:8, 3:6, 4:5, 5:4}, new=True, last=True, rows=1, columns=1, num=1, verbose=1):
+def autocorrelation(data, name, maxlags=100, format='png', suffix='-acf', path='./', fontmap = {1:10, 2:8, 3:6, 4:5, 5:4}, new=True, last=True, rows=1, columns=1, num=1, verbose=1):
     """
     Generate bar plot of the autocorrelation function for a series (usually an MCMC trace).
 
@@ -640,7 +640,7 @@ def autocorrelation(data, name, maxlag=100, format='png', suffix='-acf', path='.
         name: string
             The name of the object.
             
-        maxlag (optional): int
+        maxlags (optional): int
             The largest discrete value for the autocorrelation to be calculated (defaults to 100).
 
         format (optional): string
@@ -670,38 +670,36 @@ def autocorrelation(data, name, maxlag=100, format='png', suffix='-acf', path='.
         figure()
 
     subplot(rows, columns, num)
-    x = arange(-maxlag, maxlag)
     if ndim(data) == 1:
-        y = [_autocorr(data, lag=abs(i)) for i in x]
-        bar(x, y, edgecolor='blue', facecolor='blue')
+        acorr(data, detrend=mlab.detrend_mean, maxlags=maxlags)
+
+        # Set axis bounds
+        ylim(-.1, 1.1)
+        xlim(-maxlags, maxlags)
+
+        # Plot options
+        title('\n\n   %s acorr'%name, x=0., y=1., ha='left', va='top', fontsize='small')
+
+        # Smaller tick labels
+        tlabels = gca().get_xticklabels()
+        setp(tlabels, 'fontsize', fontmap[rows])
+
+        tlabels = gca().get_yticklabels()
+        setp(tlabels, 'fontsize', fontmap[rows])
     elif ndim(data) == 2:
-        dx = 1. / data.shape[1]
-        for j in range(data.shape[1]):
-            y = [_autocorr(data[:, j], lag=abs(i)) for i in x]
-            bar(x+j*dx, y, dx, edgecolor=cm.bone(dx*j), facecolor=cm.bone(dx*j))
+        # generate acorr plot for each dimension
+        rows = data.shape[1]
+        for j in range(rows):
+            autocorrelation(data[:, j], '%s_%d' % (name, j), maxlags, fontmap=fontmap, rows=rows, columns=1, num=j+1)
     else:
         raise ValueError, 'Only 1- and 2- dimensional functions can be displayed' 
-
-    # Set axis bounds
-    ylim(-.1, 1.1)
-    xlim(-maxlag, maxlag)
-
-    # Plot options
-    title('\n\n   %s acorr'%name, x=0., y=1., ha='left', va='top', fontsize='small')
-
-    # Smaller tick labels
-    tlabels = gca().get_xticklabels()
-    setp(tlabels, 'fontsize', fontmap[rows])
-
-    tlabels = gca().get_yticklabels()
-    setp(tlabels, 'fontsize', fontmap[rows])
 
     if standalone:
         if not os.path.exists(path):
             os.mkdir(path)
         if not path.endswith('/'):
             path += '/'
-        # Save to file
+        # Save to fiel
         savefig("%s%s%s.%s" % (path, name, suffix, format))
         #close()
 
