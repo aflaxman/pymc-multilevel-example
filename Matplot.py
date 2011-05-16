@@ -451,6 +451,12 @@ def histogram(data, name, nbins=None, datarange=(None, None), format='png', suff
 
         ylabel("Frequency", fontsize='x-small')
 
+        # Plot vertical lines for median and 95% UI
+        quant = calc_quantiles(data)
+        axvline(x=quant[50], linewidth=2, color='black')
+        for ui in [2.5, 97.5]:
+            axvline(x=quant[ui], linewidth=2, color='grey', linestyle='dotted')
+
         # Smaller tick labels
         tlabels = gca().get_xticklabels()
         setp(tlabels, 'fontsize', fontmap[rows])
