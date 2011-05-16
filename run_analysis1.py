@@ -18,7 +18,7 @@ M.sample(iter=40000, burn=20000, thin=20, verbose=0)
 
 fit = M.stats()
 for k in sorted(fit.keys()):
-    print '%10s: %s' % (k, pl.floor(fit[k]['mean']*100.)/100.)
+    print '%10s: %s' % (k, pl.floor(fit[k]['mean']*100. + .5)/100.)
 
 Matplot.plot(M)
 pl.show()
