@@ -212,3 +212,17 @@ control group is higher than for the treatment group.
 Too bad I didn't generate before-and-after numbers on the uncertainty
 intervals, that is something that might have changed in an interesting
 way with this more complicated model.
+
+In conclusion, here is why I think that this approach is worth the
+extra effort, compared to using xtmixed in STATA.  Although the STATA
+model is almost done when figure out the single line <code>xtmixed y ~
+treat ||j:</code>, that is not quite what you want.  The control
+groups are not supposed to have random effects, so you have to find a
+hack for that, maybe <code>xtmixed y ~ treat ||j: treat,
+nointercept</code>.  And then you want to add different variances for
+treatment and control, which is doable, but also hacky, maybe with
+<code>xtmixed y ~ treat ||j: treat, nointercept ||treat:</code>.  And
+now you've got a very short line, but one that is going to be very
+hard to understand in the future.  And what if you want to fiddle with
+the priors?  Or change the noise model?  Much better to have 30 clear
+lines of PyMC, in my opinion.

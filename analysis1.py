@@ -30,5 +30,3 @@ def y_hat(B=B, X=X, Z=Z, U=U):
 @mc.stochastic(observed=True)
 def y_i(value=run1.y, mu=y_hat, tau=tau_e1):
     return mc.normal_like(value,mu,tau[run1.treat])
-
-
