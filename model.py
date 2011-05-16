@@ -1,14 +1,14 @@
 import pylab as pl
 import pymc as mc
 
-run1 = pl.csv2rec('run1.csv')
+data = pl.csv2rec('data.csv')
 
 ## Design matrix for intercept and intervention effect
-X = [[1., t_ij] for t_ij in run1.treat]
+X = [[1., t_ij] for t_ij in data.treat]
 
 ## Design matrix for cluster effect
-Z = pl.zeros([len(run1), 10])
-for row, j in enumerate(run1.j):
+Z = pl.zeros([len(data), 10])
+for row, j in enumerate(data.j):
     if j <= 10:
         Z[row, j-1] = 1.
 
@@ -28,5 +28,5 @@ def y_hat(B=B, X=X, Z=Z, U=U):
     return pl.dot(X,B) + pl.dot(Z,U)
 
 @mc.stochastic(observed=True)
-def y_i(value=run1.y, mu=y_hat, tau=tau_e1):
-    return mc.normal_like(value,mu,tau[run1.treat])
+def y_i(value=data.y, mu=y_hat, tau=tau_e1):
+    return mc.normal_like(value,mu,tau[data.treat])

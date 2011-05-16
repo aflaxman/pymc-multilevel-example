@@ -1,6 +1,6 @@
 import pymc as mc
-import analysis1
-reload(analysis1)
+import model
+reload(model)
 import pylab as pl
 #from pymc import Matplot
 import Matplot
@@ -8,11 +8,11 @@ reload(Matplot)
 
 # Generate reasonable initial values by maximizing posterior with
 # variances held fixed
-M = mc.MAP([analysis1.B, analysis1.U, analysis1.y_i])
+M = mc.MAP([model.B, model.U, model.y_i])
 M.fit(method='fmin_powell', verbose=0)
 
 # Sample from full posterior distribution
-M = mc.MCMC(analysis1)
+M = mc.MCMC(model)
 M.use_step_method(mc.AdaptiveMetropolis, [M.B, M.U, M.var_e1, M.var_u])
 M.sample(iter=40000, burn=20000, thin=20, verbose=0)
 
