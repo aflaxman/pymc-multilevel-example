@@ -447,8 +447,7 @@ def histogram(data, name, nbins=None, datarange=(None, None), format='png', suff
         xlim(datarange)
 
         # Plot options
-        if last:
-            xlabel(name, fontsize='x-small')
+        title('\n\n   %s hist'%name, x=0., y=1., ha='left', va='top', fontsize='medium')
 
         ylabel("Frequency", fontsize='x-small')
 
@@ -488,9 +487,7 @@ def trace(data, name, format='png', datarange=(None, None), suffix='', path='./'
     ylim(datarange)
 
     # Plot options
-    if last:
-        xlabel('Iteration', fontsize='x-small')
-    ylabel(name, fontsize='x-small')
+    title('\n\n   %s trace'%name, x=0., y=1., ha='left', va='top', fontsize='small')
 
     # Smaller tick labels
     tlabels = gca().get_xticklabels()
@@ -690,11 +687,7 @@ def autocorrelation(data, name, maxlag=100, format='png', suffix='-acf', path='.
     xlim(-maxlag, maxlag)
 
     # Plot options
-    ylabel(name, fontsize='x-small')
-
-    if last:
-        # Label X-axis on last subplot
-        xlabel('Lag', fontsize='x-small')
+    title('\n\n   %s acorr'%name, x=0., y=1., ha='left', va='top', fontsize='small')
 
     # Smaller tick labels
     tlabels = gca().get_xticklabels()
