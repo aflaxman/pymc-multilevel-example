@@ -135,7 +135,7 @@ I think that speeding up the MCMC is more fun than cleaning up the
 data wrangling, so I'll assume that the data is being set up as
 desired for now and mess around with the step methods.  Commit linked
 here
-(https://github.com/aflaxman/pymc-multilevel-example/commit/03d0e64653a99085ac5f391acd0ad5839ddfaae4 )
+https://github.com/aflaxman/pymc-multilevel-example/commit/03d0e64653a99085ac5f391acd0ad5839ddfaae4
 is a small example of this, which doesn't speed things up, but could
 mean less samples are required of the chain.
 
@@ -146,24 +146,24 @@ make me think the it needs a longer burn-in period.  I like to throw
 out the first half of my samples, so I'll make that change, too.  Pro
 tip: I added a <code>reload(analysis1)</code> to the run_analysis1.py
 script, so that my changes to the model automatically make it into
-ipython when I say <code>time run run_analysis1</code>. (Commit linked
+ipython when I say <code>time run run_analysis1</code>. Commit linked
 here
-https://github.com/aflaxman/pymc-multilevel-example/commit/6bd55cef9c5d854f7755924c705ab8e111e20b3c )
+https://github.com/aflaxman/pymc-multilevel-example/commit/6bd55cef9c5d854f7755924c705ab8e111e20b3c
 
 I'm not keeping careful track of if the results change as I modify the
 step methods, which is probably not a recommended practice.  But it is
 fun to see the methods get faster and faster as I group more and more
 in the AM step method.  (43s wall time for M.B and M.U in one AM,
 commit here; 32s wall time for all stochs together, but the results
-are not pretty
-https://github.com/aflaxman/pymc-multilevel-example/commit/49dea954c0c681ad74a2b427a2e6ca594e501c4f )
+are not pretty)
+https://github.com/aflaxman/pymc-multilevel-example/commit/49dea954c0c681ad74a2b427a2e6ca594e501c4f
 
 Sometimes I've had good luck with choosing initial values for the MCMC
 by maximizing the posterior or something related to it.  Here is code
 to do that, which doesn't take very long (36s wall time, and
-respectible looking results are back
+respectible looking results are back)
 https://github.com/aflaxman/pymc-multilevel-example/commit/e8c376b8685c64c7183a8aeb14ec05b095042652
-).
+
 
 So that little burst of messing around has halved the run time.  Too
 bad I didn't work on the things I was supposed to be doing for the
@@ -173,7 +173,9 @@ Another hour of messing around has given me some confidence that 200K
 samples is certainly enough, and 20K samples probably is enough to
 guide model development.  To assess this, I relied on the
 autocorrelation plot of the stoch traces, which I added to the
-Matplot.plot routine, since I think everyone should use it approach.
+Matplot.plot routine, since I think everyone should use it
+approach. Commit linked here
+https://github.com/aflaxman/pymc-multilevel-example/commit/e8545ca5bec6e3a1e5dbb7ba20bb957bc67c0d95
 
 Now I'm ready to try simplifying the data wrangling section, and then
 everything will be in order to extend the model to have different
@@ -184,12 +186,16 @@ deals nicely with the column headings, and converts data to the
 correct type pretty routinely.  I'm going to do two commits in the
 process of changing this code, one which checks carefully that I'm not
 breaking anything, and then another to yield a nice short block of
-code.
+code. Commits linked here
+https://github.com/aflaxman/pymc-multilevel-example/commit/8c06499b287e1bbd9dd7a4146bc627d6e9187ad8
+and here
+https://github.com/aflaxman/pymc-multilevel-example/commit/11ff14dab2377491e8d4d155acfd74b7ca6c93d0
 
 Now, on to changing the model!  I added a separate variance parameter
 for the treatment and control groups in a slightly sneaky way.  It
 only took 10 keystrokes (roughly), but maybe it would be better to use
-more code and have a clearer approach.
+more code and have a clearer approach.  Commit linked here
+https://github.com/aflaxman/pymc-multilevel-example/commit/a46531085c673e62458b8b28153f50aebae036de
 
 Before:
          B: [-0.07  0.3 ]
@@ -215,14 +221,24 @@ way with this more complicated model.
 
 In conclusion, here is why I think that this approach is worth the
 extra effort, compared to using xtmixed in STATA.  Although the STATA
-model is almost done when figure out the single line <code>xtmixed y ~
+model is almost done when figure out the single line <code>xtmixed y
 treat ||j:</code>, that is not quite what you want.  The control
 groups are not supposed to have random effects, so you have to find a
-hack for that, maybe <code>xtmixed y ~ treat ||j: treat,
+hack for that, maybe <code>xtmixed y treat ||j: treat,
 nointercept</code>.  And then you want to add different variances for
 treatment and control, which is doable, but also hacky, maybe with
-<code>xtmixed y ~ treat ||j: treat, nointercept ||treat:</code>.  And
+<code>xtmixed y treat ||j: treat, nointercept ||treat:</code>.  And
 now you've got a very short line, but one that is going to be very
 hard to understand in the future.  And what if you want to fiddle with
 the priors?  Or change the noise model?  Much better to have 30 clear
 lines of PyMC, in my opinion.
+
+p.s. Django and Rails have gotten a lot of mileage out of emphasizing
+_convention_ in frequently performed tasks, and I think that PyMC
+models could also benefit from this approach.  I'm sure I can't
+develop our conventions myself, but I have changed all the file names
+to move towards what I think we might want them to look like. Commit
+linked here
+https://github.com/aflaxman/pymc-multilevel-example/commit/603112c1de3d0fd8fa8fdc76a21ec3f290d30a06
+My analyses often have these basic parts: data, model, fitting code,
+graphics code.  Maybe your do to.
