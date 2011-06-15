@@ -2,9 +2,7 @@ import pymc as mc
 import model
 reload(model)
 import pylab as pl
-#from pymc import Matplot
-import Matplot
-reload(Matplot)
+from pymc import Matplot
 
 # Generate reasonable initial values by maximizing posterior with
 # variances held fixed
