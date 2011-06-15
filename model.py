@@ -14,13 +14,12 @@ for row, j in enumerate(data.j):
 
 ## Priors
 var_u = mc.Gamma('var_u', alpha=1, beta=1, value=1.)
-
 B = mc.Normal('B', mu=[0, 0], tau=10000**-1)
-
 U = mc.Normal('u', mu=0, tau=var_u**-1, value=pl.zeros(10))
-
 var_e1 = mc.Uniform('var_e1', lower=0, upper=100, value=[1., 1.])
 
+## Systematic Model
 y_hat = mc.LinearCombination('X*B', [X], [B]) + mc.LinearCombination('Z*U', [Z], [U])
 
+## Stochastic Model
 y_i = mc.Normal('y_i', value=data.y, mu=y_hat, tau=var_e1[data.treat]**-1, observed=True)
